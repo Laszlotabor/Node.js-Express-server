@@ -1,35 +1,57 @@
+const asyncHandler = require("express-async-handler");
+
+const Contact = require("../models/contactModel");
+
 // @desc Get all contacts
 // @route GET/api/contacts
 //@access public
-const getContacts = (req, res) => {
-  res.status(200).json({ message: "Get all contacts" });
-};
+const getContacts = asyncHandler(async (req, res) => {
+  const contacts = await Contact.find();
+  res.status(200).json(contacts);
+});
 // @desc create new contact
 // @route POST/api/contacts
 //@access public
-const createContact = (req, res) => {
-    res.status(201).json({ message: "Create new contact" });
-};
-  
+const createContact = asyncHandler(async (req, res) => {
+  console.log("The requested body is: ", req.body);
+  const { name, email, phone } = req.body;
+  if (!email || !name || !phone) {
+    res.status(400);
+    throw new Error("All fields are mandatory!");
+  }
+  const contact = await Contact.create({
+    name,
+    email,
+    phone,
+  });
+  res.status(201).json(contact);
+});
+
 // @desc get contact
 // @route GET/api/contacts/:id
 //@access public
-const getContact = (req, res) => {
-    res.status(200).json({ message: "Get contact" });
-};
-  
+const getContact = asyncHandler(async (req, res) => {
+  res.status(200).json({ message: "Get contact" });
+});
+
 // @desc update contact
 // @route UPDATE/api/contacts/:id
 //@access public
-const updateContact = (req, res) => {
-    res.status(200).json({ message: "Update contact" });
-};
+const updateContact = asyncHandler(async (req, res) => {
+  res.status(200).json({ message: "Update contact" });
+});
 
 // @desc delete contact
 // @route DELETE/api/contacts/:id
 //@access public
-const deleteContact = (req, res) => {
-    res.status(200).json({ message: "Delete contact" });
-};
+const deleteContact = asyncHandler(async (req, res) => {
+  res.status(200).json({ message: "Delete contact" });
+});
 
-module.exports = { getContacts, createContact, getContact, updateContact, deleteContact}
+module.exports = {
+  getContacts,
+  createContact,
+  getContact,
+  updateContact,
+  deleteContact,
+};
