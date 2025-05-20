@@ -6,19 +6,19 @@ const bcrypt = require("bcrypt");
 // @route   POST /api/users/register
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, useremail, password } = req.body;
 
   console.log("Received request body:", req.body);
 
-  if (!username || !email || !password) {
+  if (!username || !useremail || !password) {
     res.status(400);
     throw new Error("All fields are mandatory!!!");
   }
 
-  const userAvailable = await User.findOne({ email });
+  const userAvailable = await User.findOne({ useremail });
 
   if (userAvailable) {
-    res.status(400);
+    // res.status(400);
     throw new Error("User already registered!!!");
   }
 
@@ -27,7 +27,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   const newUser = await User.create({
     username,
-    email,
+    useremail,
     password: hashPassword,
   });
 
@@ -37,7 +37,7 @@ const registerUser = asyncHandler(async (req, res) => {
     return res.status(201).json({
       _id: newUser.id,
       username: newUser.username,
-      email: newUser.email,
+      useremail: newUser.useremail,
     });
   } else {
     res.status(400);
