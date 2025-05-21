@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 
 // @desc    Register a user
 // @route   POST /api/users/register
-// @access  Public
+// @access  private
 const registerUser = asyncHandler(async (req, res) => {
   const { username, useremail, password } = req.body;
 
@@ -49,7 +49,7 @@ const registerUser = asyncHandler(async (req, res) => {
 //---------------------------------------------------------------------------------------------------------
 // @desc    login user
 // @route   POST /api/users/login
-// @access  Public
+// @access  Private
 const loginUser = asyncHandler(async (req, res) => {
   const { useremail, password } = req.body;
   if (!useremail || !password) {
@@ -66,7 +66,7 @@ const loginUser = asyncHandler(async (req, res) => {
         id: user.id
       }
     }, process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "1m" }
+      { expiresIn: "15m" }
     );
     res.status(200).json({ accessToken });
   } else {
@@ -78,9 +78,9 @@ const loginUser = asyncHandler(async (req, res) => {
 //---------------------------------------------------------------------------------------------------------
 // @desc    current user
 // @route   POST /api/users/current
-// @access  Public
+// @access  Private
 const currentUser = asyncHandler(async (req, res) => {
-  res.json({ message: "Current user info" });
+  res.json(req.user);
 });
 
 module.exports = {
